@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_list/app/core/database/sqlite_adm_connection.dart';
 import 'package:todo_list/app/core/ui/todo_list_ui_config.dart';
@@ -22,6 +23,7 @@ class _AppWidgetState extends State<AppWidget> {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(sqliteAdmConnection);
+    FirebaseAuth auth = FirebaseAuth.instance;
     super.dispose();
   }
 

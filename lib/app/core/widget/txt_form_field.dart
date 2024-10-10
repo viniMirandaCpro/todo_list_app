@@ -10,12 +10,14 @@ class TxtFormField extends StatelessWidget {
   final ValueNotifier<bool> obscureTextVN;
   final TextEditingController? controller;
   final FormFieldValidator<String>? validator;
+  final FocusNode? focusNode;
   TxtFormField({
     Key? key,
     required this.label,
     this.suffixIconButton,
     this.obscureText = false,
     this.controller,
+    this.focusNode,
     this.validator,
   })  : assert(
           obscureText == true ? suffixIconButton == null : true,
@@ -31,6 +33,7 @@ class TxtFormField extends StatelessWidget {
           return TextFormField(
             controller: controller,
             validator: validator,
+            focusNode: focusNode,
             obscureText: obscureTextVNValue,
             decoration: InputDecoration(
               border: OutlineInputBorder(
@@ -53,8 +56,8 @@ class TxtFormField extends StatelessWidget {
                           },
                           icon: Icon(
                             !obscureTextVNValue
-                                ? TodoListIcons.eye_slash
-                                : Icons.remove_red_eye,
+                                ? TodoList.eye_off
+                                : TodoList.eye,
                             size: 15,
                           ),
                         )

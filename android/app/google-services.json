@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "916521033149",
+    "project_id": "todo-list-master-habits",
+    "storage_bucket": "todo-list-master-habits.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:916521033149:android:241c32bec95a9b6a0bc6d4",
+        "android_client_info": {
+          "package_name": "com.todo_list"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD--7girA_VJtRdFBYVyWT40dHU_CE8xSc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

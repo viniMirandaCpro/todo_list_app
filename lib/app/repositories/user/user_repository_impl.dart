@@ -129,7 +129,6 @@ Login inválido, você se cadastrou no Master Habits com os seguintes métodos:
   Future<void> logout() async {
     await GoogleSignIn().signOut();
     _firebaseAuth.signOut();
-    // excluir os dados do sqlite
   }
 
   @override

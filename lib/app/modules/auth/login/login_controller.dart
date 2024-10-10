@@ -12,6 +12,44 @@ class LoginController extends DefaultChangeNotifier {
 
   bool get hasInfo => infoMessage != null;
 
+  Future<void> googleLogin() async {
+    try {
+      showLoadingAndResetState();
+      infoMessage = null;
+      notifyListeners();
+      final user = await _userService.googleLogin();
+      if (user != null) {
+        sucess();
+      } else {
+        _userService.logout();
+        setError('Erro ao realizar login com o google');
+      }
+    } on AuthException catch (e) {
+      _userService.logout();
+      setError(e.message);
+    } finally {
+      hideLoading();
+      notifyListeners();
+    }
+  }
+
+  Future<void> register(String email, String password) async {
+    try {
+      showLoadingAndResetState();
+      infoMessage = null;
+      notifyListeners();
+      await _userService.register(email, password);
+      infoMessage = 'Usuário cadastrado com sucesso';
+    } on AuthException catch (e) {
+      setError(e.message);
+    } catch (e) {
+      setError('Erro ao cadastrar usuário');
+    } finally {
+      hideLoading();
+      notifyListeners();
+    }
+  }
+
   Future<void> login(String email, String password) async {
     try {
       showLoadingAndResetState();
@@ -38,13 +76,11 @@ class LoginController extends DefaultChangeNotifier {
       infoMessage = null;
       notifyListeners();
       await _userService.forgotPassword(email);
-      infoMessage = 'Reset de senha enviado para seu email';
+      infoMessage = 'Reset de senha enviado para seu e-mail';
     } on AuthException catch (e) {
       setError(e.message);
     } catch (e) {
-      setError('Erro ao resetar a senha');
-
-      print(e);
+      setError('Erro ao resetar senha');
     } finally {
       hideLoading();
       notifyListeners();

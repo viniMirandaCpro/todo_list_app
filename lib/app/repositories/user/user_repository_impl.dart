@@ -2,6 +2,8 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:todo_list/app/core/database/sqlite_connection_factory.dart';
 import 'package:todo_list/app/exception/auth_exception.dart';
 
 import 'package:todo_list/app/repositories/user/user_repository.dart';
@@ -10,6 +12,7 @@ class UserRepositoryImpl implements UserRepository {
   final FirebaseAuth _firebaseAuth;
 
   UserRepositoryImpl({
+    required SqliteConnectionFactory sqliteConnectionFactory,
     required FirebaseAuth firebaseAuth,
   }) : _firebaseAuth = firebaseAuth;
 
@@ -73,14 +76,68 @@ class UserRepositoryImpl implements UserRepository {
       } else if (loginMethods.contains('google')) {
         throw AuthException(
             message:
-                'Cadastro feito com o google, a senha não pode ser resetada');
+                'Cadastro realizado com o google, não pode ser restado a senha');
       } else {
         throw AuthException(message: 'E-mail não cadastrado');
       }
     } on PlatformException catch (e, s) {
-      print('Esse é o erro $e');
-      print('Esse é o S: $s');
-      throw AuthException(message: 'Erro ao resetar senha');
+      print(e);
+      print(s);
+      throw AuthException(message: 'Erro ao restar senha');
+    }
+  }
+
+  @override
+  Future<User?> googleLogin() async {
+    List<String>? loginMethods;
+    try {
+      final googleSignIn = GoogleSignIn();
+      final googleUser = await googleSignIn.signIn();
+      if (googleUser != null) {
+        loginMethods =
+            await _firebaseAuth.fetchSignInMethodsForEmail(googleUser.email);
+
+        if (loginMethods.contains('password')) {
+          throw AuthException(
+              message:
+                  'Você se cadastrou com e-mail e senha, por favor faça login');
+        } else {
+          final googleAuth = await googleUser.authentication;
+          final firebaseCredential = GoogleAuthProvider.credential(
+              accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
+          final userCredential =
+              await _firebaseAuth.signInWithCredential(firebaseCredential);
+          return userCredential.user;
+        }
+      }
+    } on FirebaseAuthException catch (e, s) {
+      print(e);
+      print(s);
+      if (e.code == 'account-exists-with-different-credential') {
+        throw AuthException(message: '''
+Login inválido, você se cadastrou no Master Habits com os seguintes métodos:
+  ${loginMethods?.join(', ')}
+''');
+      } else {
+        throw AuthException(message: e.message ?? 'Erro ao realizar login');
+      }
+    }
+    return null;
+  }
+
+  @override
+  Future<void> logout() async {
+    await GoogleSignIn().signOut();
+    _firebaseAuth.signOut();
+    // excluir os dados do sqlite
+  }
+
+  @override
+  Future<void> updateDisplayName(String name) async {
+    final user = _firebaseAuth.currentUser;
+    if (user != null) {
+      await user.updateDisplayName(name);
+      user.reload();
     }
   }
 }

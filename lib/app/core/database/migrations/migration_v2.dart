@@ -8,7 +8,7 @@ class MigrationV2 implements Migration {
   }
 
   @override
-  void upgrade(Batch batch) {
+  void update(Batch batch) {
     batch.execute('create table teste(id integer)');
   }
 }

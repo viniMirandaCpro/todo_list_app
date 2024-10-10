@@ -56,8 +56,8 @@ class TxtFormField extends StatelessWidget {
                           },
                           icon: Icon(
                             !obscureTextVNValue
-                                ? TodoListIcons.eye_slash
-                                : Icons.remove_red_eye,
+                                ? TodoList.eye_off
+                                : TodoList.eye,
                             size: 15,
                           ),
                         )

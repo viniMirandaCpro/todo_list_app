@@ -101,7 +101,7 @@ class _LoginPageState extends State<LoginPage> {
                                             'Digite um e-mail para recuperar a senha');
                                       }
                                     },
-                                    child: const Text('Esqueceu a senha?'),
+                                    child: Text('Esqueceu sua senha?'),
                                   ),
                                   ElevatedButton(
                                     style: ElevatedButton.styleFrom(
@@ -142,7 +142,9 @@ class _LoginPageState extends State<LoginPage> {
                             const SizedBox(height: 20),
                             SignInButton(
                               Buttons.google,
-                              onPressed: () {},
+                              onPressed: () {
+                                context.read<LoginController>().googleLogin();
+                              },
                               text: 'Entrar com Google',
                               shape: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),

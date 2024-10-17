@@ -3,6 +3,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:todo_list/app/core/database/sqlite_connection_factory.dart';
 import 'package:todo_list/app/exception/auth_exception.dart';
 
@@ -10,11 +12,13 @@ import 'package:todo_list/app/repositories/user/user_repository.dart';
 
 class UserRepositoryImpl implements UserRepository {
   final FirebaseAuth _firebaseAuth;
+  final SqliteConnectionFactory _sqliteConnectionFactory;
 
   UserRepositoryImpl({
     required SqliteConnectionFactory sqliteConnectionFactory,
     required FirebaseAuth firebaseAuth,
-  }) : _firebaseAuth = firebaseAuth;
+  })  : _firebaseAuth = firebaseAuth,
+        _sqliteConnectionFactory = sqliteConnectionFactory;
 
   @override
   Future<User?> register(String email, String password) async {
@@ -129,6 +133,16 @@ Login inválido, você se cadastrou no Master Habits com os seguintes métodos:
   Future<void> logout() async {
     await GoogleSignIn().signOut();
     _firebaseAuth.signOut();
+    try {
+      String databasesPath = await getDatabasesPath();
+      String dbPath = join(databasesPath, 'TODO_LIST_PROVIDER');
+
+      await deleteDatabase(dbPath);
+
+      print('Banco de dados SQLite apagado com sucesso.');
+    } catch (e) {
+      print('Erro ao apagar o banco de dados: $e');
+    }
   }
 
   @override

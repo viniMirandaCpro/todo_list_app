@@ -115,4 +115,19 @@ class HomeController extends DefaultChangeNotifier {
     showFinishedTaks = !showFinishedTaks;
     refreshPage();
   }
+
+  void deleteTask(int taskId) async {
+    try {
+      await _tasksService.deleteTask(taskId);
+      allTasks.removeWhere((task) => task.id == taskId);
+      filteredTasks.removeWhere((task) => task.id == taskId);
+
+      notifyListeners();
+
+      print('Task deleted');
+      refreshPage();
+    } catch (e) {
+      print('Erro ao deletar a task: $e');
+    }
+  }
 }

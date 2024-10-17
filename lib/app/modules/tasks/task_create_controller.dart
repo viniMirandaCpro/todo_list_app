@@ -19,6 +19,7 @@ class TaskCreateController extends DefaultChangeNotifier {
   Future<void> save(String description) async {
     try {
       showLoadingAndResetState();
+
       notifyListeners();
       if (_selectedDate != null) {
         await _tasksService.save(_selectedDate!, description);

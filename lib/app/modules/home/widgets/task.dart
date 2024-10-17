@@ -24,21 +24,41 @@ class Task extends StatelessWidget {
             side: const BorderSide(width: .3, color: Colors.grey),
             borderRadius: BorderRadius.circular(20)),
         color: Colors.white,
-        child: ListTile(
-          contentPadding: const EdgeInsets.all(5),
-          leading: Checkbox(
-              value: model.finished,
-              onChanged: (value) =>
-                  context.read<HomeController>().checkOrUncheckTask(model)),
-          title: Text(
-            model.description,
-            style: TextStyle(
-                decoration: model.finished ? TextDecoration.lineThrough : null),
+        child: Dismissible(
+          key: Key(model.id.toString()),
+          onDismissed: (direction) =>
+              context.read<HomeController>().deleteTask(model.id),
+          background: Container(
+            color: Colors.red,
+            child: const Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: EdgeInsets.only(right: 20),
+                child: Icon(
+                  Icons.delete,
+                  color: Colors.white,
+                ),
+              ),
+            ),
           ),
-          subtitle: Text(
-            dateFormate.format(model.dateTime),
-            style: TextStyle(
-                decoration: model.finished ? TextDecoration.lineThrough : null),
+          child: ListTile(
+            contentPadding: const EdgeInsets.all(5),
+            leading: Checkbox(
+                value: model.finished,
+                onChanged: (value) =>
+                    context.read<HomeController>().checkOrUncheckTask(model)),
+            title: Text(
+              model.description,
+              style: TextStyle(
+                  decoration:
+                      model.finished ? TextDecoration.lineThrough : null),
+            ),
+            subtitle: Text(
+              dateFormate.format(model.dateTime),
+              style: TextStyle(
+                  decoration:
+                      model.finished ? TextDecoration.lineThrough : null),
+            ),
           ),
         ),
       ),

@@ -71,10 +71,4 @@ class SqliteConnectionFactory {
   }
 
   Future<void> _onDowgrade(Database db, int oldVersion, int version) async {}
-
-  // Future<void> deleteDatabaseOnLogout() async {
-  //   var databasePath = await getDatabasesPath();
-  //   var databasePathFinal = join(databasePath, _DATABASE_NAME);
-  //   await databaseFactory.deleteDatabase(databasePathFinal);
-  // }
 }

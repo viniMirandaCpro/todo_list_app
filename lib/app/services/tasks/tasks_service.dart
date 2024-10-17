@@ -7,4 +7,5 @@ abstract interface class TasksService {
   Future<List<TaskModel>> getTomorrow();
   Future<WeekTaskModel> getWeek();
   Future<void> checkOrUncheck(TaskModel task);
+  Future<void> deleteTask(int id);
 }

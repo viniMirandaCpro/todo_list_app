@@ -52,7 +52,6 @@ class _TaskCreatePageState extends State<TaskCreatePage> {
             final formValid = _formkey.currentState?.validate() ?? false;
             if (formValid) {
               widget._controller.save(_descriptionEC.text);
-              Navigator.pop(context);
             }
           },
           label: const Text(
